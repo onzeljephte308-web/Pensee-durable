@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pensée Durable - ONG Écologique</title>
+  <style>
+    :root{
+      --brand:#2f7a3a;
+      --bg:#f5f4e8;
+      --card:#ffffff;
+      --muted:#6b7a68;
+      --line:#d7e7cf;
+      --text:#243226;
+    }
+  /* Grilles fluides pour la galerie */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+/* Posts responsive */
+.post {
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+/* Actions boutons flex wrap */
+.post-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+/* Formulaire commentaire flex wrap */
+.comment-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+/* Admin panel responsive */
+#admin-panel .admin-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr;
+}
+@media(min-width: 600px){
+  #admin-panel .admin-grid {
+    grid-template-columns: 1fr 1fr; /* deux colonnes sur écran moyen+ */
+  }
+}
+
+/* Header navigation responsive */
+header nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Footer responsive */
+.footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+}
+  @media(max-width:480px){
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .controls {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .post-actions button {
+    flex: 1 1 45%;
+  }
+  .comment-form input {
+    flex: 1 1 100%;
+  }
+}
+    [data-theme="dark"]{
+      --brand:#4caf50;
+      --bg:#121412;
+      --card:#1b1f1b;
+      --muted:#9aa795;
+      --line:#2a2f2a;
+      --text:#e6efe6;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased;
+    }
+
+    /* Header */
+    header{
+      background:linear-gradient(90deg,var(--brand),#3d8a47);
+      color:#fff; padding:14px 18px; display:flex; align-items:center; justify-content:space-between;
+      gap:16px; flex-wrap:wrap;
+    }
+    .logo { display:flex; align-items:center; gap:10px; }
+    .logo img{ height:52px; border-radius:8px; }
+    .site-title{ font-weight:700; font-size:1.1rem; letter-spacing:.2px; }
+    nav ul{ list-style:none; margin:0; padding:0; display:flex; gap:12px; align-items:center; }
+    nav a{ color:inherit; text-decoration:none; font-weight:600; font-size:.95rem; opacity:.95; }
+    .controls{ display:flex; gap:8px; align-items:center; }
+
+    /* Hero */
+    #hero{ background:#dbe9d3; text-align:center; padding:46px 18px; }
+    #hero h1{ margin:0 0 8px; font-size:1.6rem; }
+    #hero p{ margin:0; color:#345235; }
+
+    main{ max-width:1000px; margin:18px auto; padding:0 12px; }
+
+    section{ margin-bottom:26px; }
+    h2{ margin:0 0 12px; border-bottom:2px solid var(--brand); padding-bottom:8px; display:inline-block; }
+
+    /* Gallery small */
+    .gallery{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin-top:12px; }
+    .gallery img, .gallery video{ width:100%; border-radius:10px; display:block; }
+
+    /* Post card */
+    .post{
+      background:var(--card); border:1px solid #e7efe3; padding:14px; border-radius:12px;
+      box-shadow:0 6px 18px rgba(0,0,0,.04); margin-bottom:18px;
+    }
+    [data-theme="dark"] .post{ border-color:var(--line); box-shadow:none; }
+    .post-header{ color:var(--muted); font-size:.9rem; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; gap:10px; }
+    .post h3{ margin:6px 0 8px; font-size:1.05rem; }
+    .post p{ margin:8px 0; line-height:1.45; white-space:pre-wrap; }
+    .post img, .post video{ width:100%; border-radius:10px; margin-top:10px; }
+
+    .post-actions{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; border-top:1px solid #f0f5ee; padding-top:10px; }
+    .btn{ padding:8px 12px; border-radius:10px; border:1px solid var(--line); background:transparent; cursor:pointer; font-weight:600; color:var(--text); }
+    .btn.primary{ background:var(--brand); color:#fff; border-color:transparent; }
+    .btn:disabled{ opacity:.6; cursor:default; }
+
+    .comments{ margin-top:12px; }
+    .comment{ background:#f2f6f2; padding:8px 10px; border-radius:8px; margin-top:8px; }
+    [data-theme="dark"] .comment{ background:#172017; }
+
+    .comment-form{ display:flex; gap:8px; margin-top:10px; }
+    .comment-form input{ flex:1; padding:8px 10px; border-radius:8px; border:1px solid #dfece0; background:transparent; color:inherit; }
+
+    /* Admin panel (exclusive) */
+    #admin-panel{
+      background:linear-gradient(135deg,#eef7ea,#f6fbf5);
+      border:1px solid #dfead9; padding:16px; border-radius:12px; display:none;
+      box-shadow:0 10px 24px rgba(47,122,58,0.06);
+    }
+    #admin-panel .admin-grid{ display:grid; gap:8px; grid-template-columns:1fr; }
+    #admin-panel input[type="text"], #admin-panel input[type="url"], #admin-panel input[type="email"], #admin-panel input[type="password"], #admin-panel textarea{
+      width:100%; padding:10px; border-radius:8px; border:1px solid #dfece0; font-size:0.95rem;
+    }
+
+    /* Admin management */
+    .admin-management{ margin-top:12px; border-top:1px dashed #e2eedf; padding-top:12px; }
+    .admin-list{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+    .admin-badge{ background:#fff; border:1px solid #e0e8df; padding:6px 10px; border-radius:999px; display:flex; gap:8px; align-items:center; font-weight:600; }
+
+    /* Footer styled */
+    footer{
+      margin-top:30px;
+      background:linear-gradient(135deg,#eef3ea,#eaf6ec);
+      padding:18px; border-top:2px solid #e0eadb;
+    }
+    .footer-inner{ max-width:1000px; margin:0 auto; display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+    .footer-brand{ display:flex; gap:12px; align-items:center; }
+    .footer-brand .badge{ background:#fff; color:var(--brand); padding:6px 10px; border-radius:999px; font-weight:700; border:1px solid #e3efe0; }
+    .footer-contact{ color:var(--muted); font-weight:600; }
+
+    /* small screens */
+    @media (max-width:720px){
+      .post-actions{ justify-content:flex-start; }
+      .footer-inner{ flex-direction:column; align-items:flex-start; gap:6px; }
+    }
+  </style>
+</head>
+<body data-theme="light">
+  <header>
+    <div class="logo">
+      <img src="logo-pensee-durable.png" alt="logo" onerror="this.style.display='none'">
+      <div>
+        <div class="site-title">Pensée Durable</div>
+        <div style="font-size:.85rem; opacity:.9">Ensemble pour un futur plus vert</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn" onclick="toggleTheme()">🌓 Mode</button>
+      <nav>
+        <ul>
+          <li style="display:inline"><a href="#institutionnel">Institutionnel</a></li>
+          <li style="display:inline"><a href="#realisation">Réalisations</a></li>
+          <li style="display:inline"><a href="#communautaire">Communautaire</a></li>
+        </ul>
+      </nav>
+      <button class="btn" onclick="openLogin()">🔑 Se connecter</button>
+    </div>
+  </header>
+
+  <section id="hero">
+    <h1>Bienvenue sur le site officiel de l'ONG Pensée Durable</h1>
+    <p>Engagés pour un avenir écologique, humain et durable.</p>
+  </section>
+
+  <main>
+    <section id="institutionnel">
+      <h2>Présentation de l'ONG</h2>
+      <article>
+        <h3>Mission</h3>
+        <p>Promouvoir le développement durable à travers des actions concrètes, éducatives et communautaires.</p>
+        <h3>Vision</h3>
+        <p>Construire un monde respectueux de l'environnement, où chaque individu agit en conscience.</p>
+      </article>
+    </section>
+
+    <section id="realisation">
+      <h2>Réalisations</h2>
+      <div class="gallery">
+        <img src="img/reforestation.jpg" alt="reforestation" onerror="this.style.display='none'">
+        <img src="img/sensibilisation.jpg" alt="sensibilisation" onerror="this.style.display='none'">
+      </div>
+    </section>
+
+    <section id="communautaire">
+      <h2>Publications Communautaires</h2>
+      <div id="posts"></div>
+
+      <!-- Admin Panel (exclusif) -->
+      <div id="admin-panel" aria-hidden="true">
+        <h3>Nouvelle publication (admin)</h3>
+        <div class="admin-grid">
+          <input id="titre" type="text" placeholder="Titre">
+          <textarea id="contenu" rows="4" placeholder="Contenu..."></textarea>
+          <input id="media" type="file" accept="image/*,video/*">
+          <input id="lien" type="url" placeholder="Lien externe (facultatif)">
+        </div>
+        <div style="display:flex; gap:8px; margin-top:10px;">
+          <button class="btn primary" onclick="ajouterPost()">Publier</button>
+          <button class="btn" onclick="logoutAdmin()">🚪 Déconnexion</button>
+        </div>
+
+        <div class="admin-management" id="admin-management" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <strong>Gestion des administrateurs</strong>
+            <small style="color:var(--muted)">Admins gérés localement (fichier unique)</small>
+          </div>
+
+          <div style="margin-top:10px; display:flex; gap:8px; align-items:center;">
+            <input id="newAdminEmail" type="email" placeholder="Email admin">
+            <input id="newAdminPass" type="password" placeholder="Mot de passe">
+            <button class="btn" onclick="addAdmin()">➕ Ajouter</button>
+          </div>
+
+          <div class="admin-list" id="admin-list"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer stylisé -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="badge">Pensée Durable</div>
+        <div style="font-weight:700">ONG Écologique</div>
+      </div>
+      <div class="footer-contact">
+        <span class="badge" style="background:#fff; padding:6px 10px; border-radius:999px; font-weight:700; margin-right:10px;">📧</span>
+        contact@pensee-durable.org
+      </div>
+    </div>
+  </footer>
+
+  <!-- Login Modal -->
+  <div id="login-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); align-items:center; justify-content:center; z-index:10000;">
+    <div style="background:var(--card); padding:18px; border-radius:12px; width:300px; box-shadow:0 10px 30px rgba(0,0,0,.25);">
+      <h3 style="margin:0 0 8px">Connexion Admin</h3>
+      <input id="login-email" type="email" placeholder="Email" style="width:100%; padding:8px; border-radius:8px; border:1px solid #dfece0; margin-bottom:8px;">
+      <input id="login-pass" type="password" placeholder="Mot de passe" style="width:100%; padding:8px; border-radius:8px; border:1px solid #dfece0; margin-bottom:12px;">
+      <div style="display:flex; gap:8px; justify-content:flex-end;">
+        <button class="btn" onclick="closeLogin()">Annuler</button>
+        <button class="btn primary" onclick="performLogin()">Se connecter</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /******************************
+     * Configuration initiale
+     ****************************/
+    const LS_ADMINS_KEY = "pd_admins_v1";
+    const LS_POSTS_KEY = "pd_posts_v1";
+    const LS_LIKED_KEY = "pd_liked_v1";
+
+    // ✅ Admins par défaut
+    const listeAdminsDefault = [
+      { email: "admin@pensee-durable.org", pass: "admin123", name: "Fondateur" },
+      { email: "joeltshilonda26@gmail.com", pass: "admin123", name: "Joel" },
+      { email: "onzeljephte308@gmail.com", pass: "admin123", name: "Jephte" }
+    ];
+
+    function getStoredAdmins(){
+      try{ return JSON.parse(localStorage.getItem(LS_ADMINS_KEY)) || listeAdminsDefault.slice(); }
+      catch(e){ return listeAdminsDefault.slice(); }
+    }
+    function setStoredAdmins(arr){ localStorage.setItem(LS_ADMINS_KEY, JSON.stringify(arr)); }
+
+    function getPosts(){ return JSON.parse(localStorage.getItem(LS_POSTS_KEY) || "[]"); }
+    function setPosts(arr){ localStorage.setItem(LS_POSTS_KEY, JSON.stringify(arr)); }
+    function getLikedSet(){ return new Set(JSON.parse(localStorage.getItem(LS_LIKED_KEY) || "[]")); }
+    function setLikedSet(s){ localStorage.setItem(LS_LIKED_KEY, JSON.stringify([...s])); }
+
+    const uid = ()=> Date.now().toString(36)+Math.random().toString(36).slice(2);
+    const fmtDate = ts=>{ const d=new Date(ts); return d.toLocaleDateString()+" "+d.toLocaleTimeString().slice(0,5); }
+    const escapeHtml = s => String(s||"").replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    const nl2br = s => (String(s||"").replace(/\n/g,"<br>"));
+
+    function toggleTheme(){
+      const root = document.documentElement;
+      const current = root.getAttribute("data-theme") || "light";
+      const next = current==="light" ? "dark" : "light";
+      root.setAttribute("data-theme", next);
+      localStorage.setItem("pd_theme", next);
+    }
+    (function applyStoredTheme(){
+      const t = localStorage.getItem("pd_theme") || "light";
+      document.documentElement.setAttribute("data-theme", t);
+    })();
+
+    // -- Rendu posts et médias
+    function renderMedia(p){ if(!p.media) return ""; return p.type==="image"?`<img src="${p.media}" alt="">`:`<video controls src="${p.media}"></video>`; }
+    function renderComments(list){ if(!list||!list.length) return ""; return list.map(c=>`<div class="comment"><strong>Visiteur :</strong> ${escapeHtml(c)}</div>`).join(""); }
+
+    function afficherPosts(){
+      const posts=getPosts();
+      const liked=getLikedSet();
+      const container=document.getElementById("posts");
+      if(!posts.length){ container.innerHTML="<p style='color:var(--muted)'>Aucune publication pour le moment.</p>"; return; }
+      let html="";
+      posts.forEach(p=>{
+        const already=liked.has(p.id);
+        html+=`
+          <div class="post" id="post-${p.id}">
+            <div class="post-header"><span>📢 Publication</span><span>${fmtDate(p.createdAt)}</span></div>
+            <h3>${escapeHtml(p.titre)}</h3>
+            <p>${nl2br(escapeHtml(p.contenu))}</p>
+            ${renderMedia(p)}
+            ${p.lien ? `<p><a href="${escapeHtml(p.lien)}" target="_blank" rel="noopener">🔗 Voir le lien</a></p>` : ""}
+            <div class="post-actions">
+              <button class="btn" onclick="likePost('${p.id}')" ${already?"disabled":""}>❤️ J'aime (${p.likes||0})</button>
+              <button class="btn" onclick="toggleComment('${p.id}')">💬 Commenter</button>
+              ${p.media? `<button class="btn" onclick="downloadMedia('${p.id}')">⬇️ Télécharger</button>`:""}
+              <button class="btn" onclick="sharePost('${p.id}')">🔗 Partager</button>
+              ${window.__isAdmin? `<button class="btn" onclick="supprimerPost('${p.id}')">🗑 Supprimer</button>`:""}
+            </div>
+            <div class="comments" id="comments-${p.id}">
+              ${renderComments(p.comments)}
+              <div class="comment-form" id="cform-${p.id}" style="display:none;">
+                <input id="cinput-${p.id}" type="text" placeholder="Écrire un commentaire…">
+                <button class="btnonclick="ajouterComment('${p.id}')">Envoyer</button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function likePost(id){
+      const posts = getPosts();
+      const liked = getLikedSet();
+      if(liked.has(id)) return;
+      const post = posts.find(p => p.id === id);
+      if(post){ post.likes = (post.likes||0)+1; liked.add(id); setPosts(posts); setLikedSet(liked); afficherPosts(); }
+    }
+
+    function toggleComment(id){
+      const form = document.getElementById(`cform-${id}`);
+      if(form) form.style.display = form.style.display==="none"?"flex":"none";
+    }
+
+    function ajouterComment(id){
+      const input = document.getElementById(`cinput-${id}`);
+      if(!input || !input.value.trim()) return;
+      const posts = getPosts();
+      const post = posts.find(p => p.id===id);
+      if(post){ post.comments = post.comments||[]; post.comments.push(input.value.trim()); setPosts(posts); input.value=""; afficherPosts(); }
+    }
+
+    function downloadMedia(id){
+      const posts = getPosts();
+      const post = posts.find(p=>p.id===id);
+      if(!post||!post.media) return;
+      const a = document.createElement("a");
+      a.href = post.media;
+      a.download = post.media.split("/").pop();
+      a.click();
+    }
+
+    function sharePost(id){
+      const posts = getPosts();
+      const post = posts.find(p=>p.id===id);
+      if(!post) return;
+      const text = `Regardez cette publication de Pensée Durable : ${post.titre}\n${post.contenu}`;
+      navigator.clipboard.writeText(text).then(()=>alert("Texte copié dans le presse-papier !"));
+    }
+
+    // ===== Admin =====
+    window.__isAdmin=false;
+    function openLogin(){ document.getElementById("login-modal").style.display="flex"; }
+    function closeLogin(){ document.getElementById("login-modal").style.display="none"; }
+
+    function performLogin(){
+      const email = document.getElementById("login-email").value.trim();
+      const pass = document.getElementById("login-pass").value.trim();
+      const admins = getStoredAdmins();
+      const admin = admins.find(a => a.email===email && a.pass===pass);
+      if(admin){
+        window.__isAdmin = true;
+        document.getElementById("admin-panel").style.display="block";
+        document.getElementById("login-modal").style.display="none";
+        afficherPosts();
+        renderAdminList();
+        document.getElementById("admin-management").style.display="block";
+      } else { alert("Email ou mot de passe incorrect !"); }
+    }
+
+    function logoutAdmin(){
+      window.__isAdmin=false;
+      document.getElementById("admin-panel").style.display="none";
+      afficherPosts();
+    }
+
+    function ajouterPost(){
+      const titre = document.getElementById("titre").value.trim();
+      const contenu = document.getElementById("contenu").value.trim();
+      const mediaInput = document.getElementById("media");
+      const lien = document.getElementById("lien").value.trim();
+      if(!titre && !contenu && !mediaInput.files.length) return alert("Renseignez au moins un titre, un contenu ou un média !");
+      
+      const post = { id: uid(), titre, contenu, createdAt: Date.now(), likes:0, comments:[], lien:lien||"" };
+      if(mediaInput.files.length){
+        const file = mediaInput.files[0];
+        const reader = new FileReader();
+        reader.onload = e => {
+          post.media = e.target.result;
+          post.type = file.type.startsWith("image")?"image":"video";
+          const posts = getPosts();
+          posts.unshift(post);
+          setPosts(posts);
+          afficherPosts();
+        };
+        reader.readAsDataURL(file);
+      } else {
+        const posts = getPosts();
+        posts.unshift(post);
+        setPosts(posts);
+        afficherPosts();
+      }
+      document.getElementById("titre").value="";
+      document.getElementById("contenu").value="";
+      document.getElementById("media").value="";
+      document.getElementById("lien").value="";
+    }
+
+    // Gestion des admins
+    function renderAdminList(){
+      const list = getStoredAdmins();
+      const container = document.getElementById("admin-list");
+      container.innerHTML="";
+      list.forEach(a=>{
+        const div = document.createElement("div");
+        div.className="admin-badge";
+        div.textContent=a.email;
+        container.appendChild(div);
+      });
+    }
+
+    function addAdmin(){
+      const email = document.getElementById("newAdminEmail").value.trim();
+      const pass = document.getElementById("newAdminPass").value.trim();
+      if(!email || !pass) return alert("Email et mot de passe requis !");
+      const admins = getStoredAdmins();
+      if(admins.find(a=>a.email===email)) return alert("Admin déjà existant !");
+      admins.push({email, pass, name:email.split("@")[0]});
+      setStoredAdmins(admins);
+      renderAdminList();
+      document.getElementById("newAdminEmail").value="";
+      document.getElementById("newAdminPass").value="";
+      alert("Administrateur ajouté !");
+    }
+
+    // Initial render
+    afficherPosts();
+  </script>
+</body>
+</html>
