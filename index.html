@@ -4,7 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Pensée Durable - ONG Écologique</title>
-<a href="http://169.159.211.189">pensee-durable</a>
   <style>
     :root{
       --brand:#2f7a3a;
@@ -14,77 +13,6 @@
       --line:#d7e7cf;
       --text:#243226;
     }
-  /* Grilles fluides pour la galerie */
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
-}
-
-/* Posts responsive */
-.post {
-  padding: 12px;
-  margin-bottom: 16px;
-}
-
-/* Actions boutons flex wrap */
-.post-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 10px;
-}
-
-/* Formulaire commentaire flex wrap */
-.comment-form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 8px;
-}
-
-/* Admin panel responsive */
-#admin-panel .admin-grid {
-  display: grid;
-  gap: 8px;
-  grid-template-columns: 1fr;
-}
-@media(min-width: 600px){
-  #admin-panel .admin-grid {
-    grid-template-columns: 1fr 1fr; /* deux colonnes sur écran moyen+ */
-  }
-}
-
-/* Header navigation responsive */
-header nav ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-/* Footer responsive */
-.footer-inner {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: space-between;
-}
-  @media(max-width:480px){
-  header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .controls {
-    flex-direction: column;
-    gap: 6px;
-  }
-  .post-actions button {
-    flex: 1 1 45%;
-  }
-  .comment-form input {
-    flex: 1 1 100%;
-  }
-}
     [data-theme="dark"]{
       --brand:#4caf50;
       --bg:#121412;
@@ -216,9 +144,13 @@ header nav ul {
       <h2>Présentation de l'ONG</h2>
       <article>
         <h3>Mission</h3>
-        <p>Promouvoir le développement durable à travers des actions concrètes, éducatives et communautaires.</p>
+        <p>Former une génération congolaise responsable, où chaque citoyen pense, agit et décide en intégrant l’environnement et les principes du développement durable dans ses choix quotidiens.</p>
         <h3>Vision</h3>
-        <p>Construire un monde respectueux de l'environnement, où chaque individu agit en conscience.</p>
+        <p>Pour concrétiser notre vision, Pensée Durable s'articule autour de quatre missions essentielles
+- Éduquer les citoyens aux enjeux environnementaux  
+- Sensibiliser à l’importance de la durabilité  
+- Former aux bonnes pratiques écologiques  
+- Accompagner les initiatives vertes et citoyennes</p>
       </article>
     </section>
 
@@ -266,7 +198,7 @@ header nav ul {
     </section>
   </main>
 
-  <!-- Footer stylisé -->
+  <!-- Footer stylisé (Pensée Durable + Email) -->
   <footer>
     <div class="footer-inner">
       <div class="footer-brand">
@@ -280,7 +212,7 @@ header nav ul {
     </div>
   </footer>
 
-  <!-- Login Modal -->
+  <!-- Login Modal (simple) -->
   <div id="login-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); align-items:center; justify-content:center; z-index:10000;">
     <div style="background:var(--card); padding:18px; border-radius:12px; width:300px; box-shadow:0 10px 30px rgba(0,0,0,.25);">
       <h3 style="margin:0 0 8px">Connexion Admin</h3>
@@ -296,34 +228,39 @@ header nav ul {
   <script>
     /******************************
      * Configuration initiale
-     ****************************/
+     * - listeAdminsDefault : admins embarqués (email + password)
+     * - stockage persistant : localStorage (clients peuvent ajouter admins)
+     * ****************************/
     const LS_ADMINS_KEY = "pd_admins_v1";
     const LS_POSTS_KEY = "pd_posts_v1";
     const LS_LIKED_KEY = "pd_liked_v1";
 
-    // ✅ Admins par défaut
     const listeAdminsDefault = [
-      { email: "admin@pensee-durable.org", pass: "admin123", name: "Fondateur" },
-      { email: "joeltshilonda26@gmail.com", pass: "admin123", name: "Joel" },
-      { email: "onzeljephte308@gmail.com", pass: "admin123", name: "Jephte" }
+      { email: "admin@pensee-durable.org", pass: "admin123", name: "Fondateur" }
+      // tu peux ajouter d'autres admins par défaut ici
     ];
 
+    /* Helpers stockage admins */
     function getStoredAdmins(){
-      try{ return JSON.parse(localStorage.getItem(LS_ADMINS_KEY)) || listeAdminsDefault.slice(); }
-      catch(e){ return listeAdminsDefault.slice(); }
+      try{
+        return JSON.parse(localStorage.getItem(LS_ADMINS_KEY)) || listeAdminsDefault.slice();
+      }catch(e){ return listeAdminsDefault.slice(); }
     }
     function setStoredAdmins(arr){ localStorage.setItem(LS_ADMINS_KEY, JSON.stringify(arr)); }
 
+    /* Posts + likes */
     function getPosts(){ return JSON.parse(localStorage.getItem(LS_POSTS_KEY) || "[]"); }
     function setPosts(arr){ localStorage.setItem(LS_POSTS_KEY, JSON.stringify(arr)); }
     function getLikedSet(){ return new Set(JSON.parse(localStorage.getItem(LS_LIKED_KEY) || "[]")); }
     function setLikedSet(s){ localStorage.setItem(LS_LIKED_KEY, JSON.stringify([...s])); }
 
+    /* Utilitaires */
     const uid = ()=> Date.now().toString(36)+Math.random().toString(36).slice(2);
     const fmtDate = ts=>{ const d=new Date(ts); return d.toLocaleDateString()+" "+d.toLocaleTimeString().slice(0,5); }
     const escapeHtml = s => String(s||"").replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
     const nl2br = s => (String(s||"").replace(/\n/g,"<br>"));
 
+    /* Theme */
     function toggleTheme(){
       const root = document.documentElement;
       const current = root.getAttribute("data-theme") || "light";
@@ -336,19 +273,26 @@ header nav ul {
       document.documentElement.setAttribute("data-theme", t);
     })();
 
-    // -- Rendu posts et médias
-    function renderMedia(p){ if(!p.media) return ""; return p.type==="image"?`<img src="${p.media}" alt="">`:`<video controls src="${p.media}"></video>`; }
-    function renderComments(list){ if(!list||!list.length) return ""; return list.map(c=>`<div class="comment"><strong>Visiteur :</strong> ${escapeHtml(c)}</div>`).join(""); }
+    /* RENDU des posts */
+    function renderMedia(p){
+      if(!p.media) return "";
+      if(p.type==="image") return `<img src="${p.media}" alt="">`;
+      return `<video controls src="${p.media}"></video>`;
+    }
+    function renderComments(list){
+      if(!list || !list.length) return "";
+      return list.map(c => `<div class="comment"><strong>Visiteur :</strong> ${escapeHtml(c)}</div>`).join("");
+    }
 
     function afficherPosts(){
-      const posts=getPosts();
-      const liked=getLikedSet();
-      const container=document.getElementById("posts");
-      if(!posts.length){ container.innerHTML="<p style='color:var(--muted)'>Aucune publication pour le moment.</p>"; return; }
-      let html="";
-      posts.forEach(p=>{
-        const already=liked.has(p.id);
-        html+=`
+      const posts = getPosts();
+      const liked = getLikedSet();
+      const container = document.getElementById("posts");
+      if(!posts.length){ container.innerHTML = "<p style='color:var(--muted)'>Aucune publication pour le moment.</p>"; return; }
+      let html = "";
+      posts.forEach(p => {
+        const already = liked.has(p.id);
+        html += `
           <div class="post" id="post-${p.id}">
             <div class="post-header"><span>📢 Publication</span><span>${fmtDate(p.createdAt)}</span></div>
             <h3>${escapeHtml(p.titre)}</h3>
@@ -356,17 +300,17 @@ header nav ul {
             ${renderMedia(p)}
             ${p.lien ? `<p><a href="${escapeHtml(p.lien)}" target="_blank" rel="noopener">🔗 Voir le lien</a></p>` : ""}
             <div class="post-actions">
-              <button class="btn" onclick="likePost('${p.id}')" ${already?"disabled":""}>❤️ J'aime (${p.likes||0})</button>
+              <button class="btn" onclick="likePost('${p.id}')" ${already ? "disabled":""}>❤️ J'aime (${p.likes||0})</button>
               <button class="btn" onclick="toggleComment('${p.id}')">💬 Commenter</button>
-              ${p.media? `<button class="btn" onclick="downloadMedia('${p.id}')">⬇️ Télécharger</button>`:""}
+              ${p.media? `<button class="btn" onclick="downloadMedia('${p.id}')">⬇️ Télécharger</button>` : ""}
               <button class="btn" onclick="sharePost('${p.id}')">🔗 Partager</button>
-              ${window.__isAdmin? `<button class="btn" onclick="supprimerPost('${p.id}')">🗑 Supprimer</button>`:""}
+              ${window.__isAdmin ? `<button class="btn" onclick="supprimerPost('${p.id}')">🗑 Supprimer</button>` : ""}
             </div>
             <div class="comments" id="comments-${p.id}">
               ${renderComments(p.comments)}
               <div class="comment-form" id="cform-${p.id}" style="display:none;">
                 <input id="cinput-${p.id}" type="text" placeholder="Écrire un commentaire…">
-                <button class="btnonclick="ajouterComment('${p.id}')">Envoyer</button>
+                <button class="btn primary" onclick="addComment('${p.id}')">Publier</button>
               </div>
             </div>
           </div>
@@ -375,132 +319,194 @@ header nav ul {
       container.innerHTML = html;
     }
 
+    /* Création / sauvegarde post */
+    async function ajouterPost(){
+      const titre = document.getElementById("titre").value.trim();
+      const contenu = document.getElementById("contenu").value.trim();
+      const fichier = document.getElementById("media").files[0];
+      const lien = document.getElementById("lien").value.trim();
+
+      if(!titre || !contenu){ alert("Titre et contenu obligatoires."); return; }
+
+      const finalize = (dataURL, type, mime, ext) => {
+        const posts = getPosts();
+        posts.unshift({
+          id: uid(), createdAt: Date.now(), titre, contenu,
+          media: dataURL || null, type: type || null,
+          mime: mime || null, ext: ext || null, lien: lien||null,
+          likes: 0, comments:[]
+        });
+        setPosts(posts);
+        document.getElementById("titre").value="";
+        document.getElementById("contenu").value="";
+        document.getElementById("media").value="";
+        document.getElementById("lien").value="";
+        afficherPosts();
+        // scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+
+      if(fichier){
+        const reader = new FileReader();
+        reader.onload = e => {
+          const isImg = fichier.type.startsWith("image");
+          const ext = guessExtFromMime(fichier.type);
+          finalize(e.target.result, isImg ? "image":"video", fichier.type, ext);
+        };
+        reader.readAsDataURL(fichier);
+      } else {
+        finalize(null,null,null,null);
+      }
+    }
+
+    function supprimerPost(id){
+      if(!confirm("Supprimer cette publication ?")) return;
+      const posts = getPosts().filter(p=>p.id!==id);
+      setPosts(posts); afficherPosts();
+    }
+
+    /* Likes / Commentaires / Partage */
     function likePost(id){
       const posts = getPosts();
+      const idx = posts.findIndex(p=>p.id===id); if(idx<0) return;
       const liked = getLikedSet();
       if(liked.has(id)) return;
-      const post = posts.find(p => p.id === id);
-      if(post){ post.likes = (post.likes||0)+1; liked.add(id); setPosts(posts); setLikedSet(liked); afficherPosts(); }
+      posts[idx].likes = (posts[idx].likes||0)+1;
+      setPosts(posts);
+      liked.add(id); setLikedSet(liked);
+      afficherPosts();
     }
-
     function toggleComment(id){
-      const form = document.getElementById(`cform-${id}`);
-      if(form) form.style.display = form.style.display==="none"?"flex":"none";
+      const f = document.getElementById("cform-"+id);
+      if(!f) return;
+      f.style.display = (f.style.display==="none"||f.style.display==="") ? "flex":"none";
+      const inp = document.getElementById("cinput-"+id);
+      if(inp) inp.focus();
     }
-
-    function ajouterComment(id){
-      const input = document.getElementById(`cinput-${id}`);
-      if(!input || !input.value.trim()) return;
+    function addComment(id){
+      const inp = document.getElementById("cinput-"+id); if(!inp) return;
+      const txt = inp.value.trim(); if(!txt) return;
       const posts = getPosts();
-      const post = posts.find(p => p.id===id);
-      if(post){ post.comments = post.comments||[]; post.comments.push(input.value.trim()); setPosts(posts); input.value=""; afficherPosts(); }
-    }
-
-    function downloadMedia(id){
-      const posts = getPosts();
-      const post = posts.find(p=>p.id===id);
-      if(!post||!post.media) return;
-      const a = document.createElement("a");
-      a.href = post.media;
-      a.download = post.media.split("/").pop();
-      a.click();
+      const idx = posts.findIndex(p=>p.id===id); if(idx<0) return;
+      posts[idx].comments = posts[idx].comments||[]; posts[idx].comments.push(txt);
+      setPosts(posts); inp.value=""; afficherPosts(); toggleComment(id);
     }
 
     function sharePost(id){
-      const posts = getPosts();
-      const post = posts.find(p=>p.id===id);
-      if(!post) return;
-      const text = `Regardez cette publication de Pensée Durable : ${post.titre}\n${post.contenu}`;
-      navigator.clipboard.writeText(text).then(()=>alert("Texte copié dans le presse-papier !"));
+      const url = location.origin + location.pathname + "#post-" + id;
+      if(navigator.share){ navigator.share({ title: "Publication Pensée Durable", url }).catch(()=>{}); }
+      else { navigator.clipboard?.writeText(url).then(()=>alert("Lien copié")); }
     }
 
-    // ===== Admin =====
-    window.__isAdmin=false;
-    function openLogin(){ document.getElementById("login-modal").style.display="flex"; }
-    function closeLogin(){ document.getElementById("login-modal").style.display="none"; }
+    /* Téléchargement dans stockage téléphone */
+    async function downloadMedia(id){
+      const p = getPosts().find(x=>x.id===id);
+      if(!p || !p.media){ alert("Aucun média disponible."); return; }
+      try{
+        const blob = await getBlobFromPost(p);
+        const filename = buildFilename(p, blob);
+        if(window.showSaveFilePicker){
+          const handle = await window.showSaveFilePicker({
+            suggestedName: filename,
+            types: [{ description: 'Fichier média', accept: { [blob.type || 'application/octet-stream']: ['.'+ (p.ext || guessExtFromMime(blob.type))] } }]
+          });
+          const writable = await handle.createWritable();
+          await writable.write(blob); await writable.close();
+          alert("Fichier enregistré.");
+          return;
+        }
+        // fallback: anchor download
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+        URL.revokeObjectURL(url);
+        alert("Téléchargement lancé (vérifie le dossier Téléchargements).");
+      }catch(e){
+        console.error(e); alert("Impossible de télécharger ici (limitation du navigateur).");
+      }
+    }
+
+    async function getBlobFromPost(p){
+      if(typeof p.media==="string" && p.media.startsWith("data:")) return dataURLToBlob(p.media);
+      const res = await fetch(p.media); return await res.blob();
+    }
+    function dataURLToBlob(dataUrl){
+      const [h,b] = dataUrl.split(','); const mime = (h.match(/data:(.*?);/)||[])[1]||"application/octet-stream";
+      const bin = atob(b); const len = bin.length; const arr = new Uint8Array(len);
+      for(let i=0;i<len;i++) arr[i]=bin.charCodeAt(i);
+      return new Blob([arr],{type:mime});
+    }
+    function guessExtFromMime(m){
+      if(!m) return "bin";
+      const map = {"image/jpeg":"jpg","image/png":"png","image/webp":"webp","image/gif":"gif","video/mp4":"mp4","video/webm":"webm","video/ogg":"ogv"};
+      return map[m]||"bin";
+    }
+    function buildFilename(p, blob){ const base=(p.titre||"media").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"")||"media"; const ext = p.ext||guessExtFromMime(blob.type)||"bin"; const ts = new Date(p.createdAt||Date.now()).toISOString().slice(0,19).replace(/[:T]/g,"-"); return `${base}-${ts}.${ext}`; }
+
+    /* ===== Admin auth & management (email+password) ===== */
+    function openLogin(){ document.getElementById("login-modal").style.display="flex"; document.getElementById("login-email").focus(); }
+    function closeLogin(){ document.getElementById("login-modal").style.display="none"; document.getElementById("login-email").value=""; document.getElementById("login-pass").value=""; }
 
     function performLogin(){
-      const email = document.getElementById("login-email").value.trim();
-      const pass = document.getElementById("login-pass").value.trim();
+      const email = document.getElementById("login-email").value.trim().toLowerCase();
+      const pass = document.getElementById("login-pass").value;
       const admins = getStoredAdmins();
-      const admin = admins.find(a => a.email===email && a.pass===pass);
-      if(admin){
+      const found = admins.find(a=>a.email.toLowerCase()===email && a.pass===pass);
+      if(found){
         window.__isAdmin = true;
+        closeLogin();
         document.getElementById("admin-panel").style.display="block";
-        document.getElementById("login-modal").style.display="none";
-        afficherPosts();
-        renderAdminList();
         document.getElementById("admin-management").style.display="block";
-      } else { alert("Email ou mot de passe incorrect !"); }
-    }
-
-    function logoutAdmin(){
-      window.__isAdmin=false;
-      document.getElementById("admin-panel").style.display="none";
-      afficherPosts();
-    }
-
-    function ajouterPost(){
-      const titre = document.getElementById("titre").value.trim();
-      const contenu = document.getElementById("contenu").value.trim();
-      const mediaInput = document.getElementById("media");
-      const lien = document.getElementById("lien").value.trim();
-      if(!titre && !contenu && !mediaInput.files.length) return alert("Renseignez au moins un titre, un contenu ou un média !");
-      
-      const post = { id: uid(), titre, contenu, createdAt: Date.now(), likes:0, comments:[], lien:lien||"" };
-      if(mediaInput.files.length){
-        const file = mediaInput.files[0];
-        const reader = new FileReader();
-        reader.onload = e => {
-          post.media = e.target.result;
-          post.type = file.type.startsWith("image")?"image":"video";
-          const posts = getPosts();
-          posts.unshift(post);
-          setPosts(posts);
-          afficherPosts();
-        };
-        reader.readAsDataURL(file);
-      } else {
-        const posts = getPosts();
-        posts.unshift(post);
-        setPosts(posts);
+        renderAdminList();
+        alert("Bienvenue admin: " + (found.name || found.email));
         afficherPosts();
+      } else {
+        alert("Identifiants incorrects.");
       }
-      document.getElementById("titre").value="";
-      document.getElementById("contenu").value="";
-      document.getElementById("media").value="";
-      document.getElementById("lien").value="";
     }
 
-    // Gestion des admins
     function renderAdminList(){
-      const list = getStoredAdmins();
-      const container = document.getElementById("admin-list");
-      container.innerHTML="";
-      list.forEach(a=>{
-        const div = document.createElement("div");
-        div.className="admin-badge";
-        div.textContent=a.email;
-        container.appendChild(div);
-      });
+      const wrap = document.getElementById("admin-list");
+      const admins = getStoredAdmins();
+      wrap.innerHTML = admins.map(a => `<div class="admin-badge">${escapeHtml(a.email)} <button class="btn" style="padding:4px 8px;margin-left:6px" onclick="removeAdmin('${a.email}')">🗑</button></div>`).join("");
     }
 
     function addAdmin(){
-      const email = document.getElementById("newAdminEmail").value.trim();
-      const pass = document.getElementById("newAdminPass").value.trim();
-      if(!email || !pass) return alert("Email et mot de passe requis !");
+      const email = (document.getElementById("newAdminEmail").value || "").trim().toLowerCase();
+      const pass = (document.getElementById("newAdminPass").value || "").trim();
+      if(!email || !pass){ alert("Email et mot de passe requis."); return; }
       const admins = getStoredAdmins();
-      if(admins.find(a=>a.email===email)) return alert("Admin déjà existant !");
-      admins.push({email, pass, name:email.split("@")[0]});
-      setStoredAdmins(admins);
-      renderAdminList();
-      document.getElementById("newAdminEmail").value="";
-      document.getElementById("newAdminPass").value="";
-      alert("Administrateur ajouté !");
+      if(admins.find(a=>a.email.toLowerCase()===email)){ alert("Cet email est déjà admin."); return; }
+      admins.push({ email, pass, name: email.split('@')[0] });
+      setStoredAdmins(admins); renderAdminList();
+      document.getElementById("newAdminEmail").value=""; document.getElementById("newAdminPass").value="";
+      alert("Admin ajouté.");
     }
 
-    // Initial render
-    afficherPosts();
+    function removeAdmin(email){
+      if(!confirm("Supprimer admin "+email+" ?")) return;
+      let admins = getStoredAdmins().filter(a=>a.email.toLowerCase()!==email.toLowerCase());
+      if(!admins.length){ alert("Au moins un admin requis."); return; }
+      setStoredAdmins(admins); renderAdminList(); alert("Admin supprimé.");
+    }
+
+    /* Init / migration */
+    (function init(){
+      // ensure admins stored
+      if(!localStorage.getItem(LS_ADMINS_KEY)) setStoredAdmins(listeAdminsDefault.slice());
+      // migrate posts (add ids if needed)
+      const posts = getPosts().map(p=>({ id: p.id||uid(), createdAt: p.createdAt||Date.now(), likes:p.likes||0, comments:p.comments||[], ...p }));
+      setPosts(posts); afficherPosts();
+      // theme already applied earlier
+    })();
+
+    // close modal on backdrop click
+    document.getElementById("login-modal").addEventListener("click", e => { if(e.target.id==="login-modal") closeLogin(); });
+
+    /* small helpers for clipboard fallback */
+    if(!navigator.clipboard){
+      navigator.clipboard = { writeText: (t)=>{ return new Promise((res,rej)=>{ try{ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); res(); }catch(e){ rej(e);} }) } };
+    }
   </script>
 </body>
-</html>
+          </html>
